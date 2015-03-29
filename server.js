@@ -39,7 +39,7 @@ Server.prototype.isNameFree = function(name) {
 };
 
 Server.prototype.start = function() {
-
+    log.info('===running oclushut testing branch===');
     log.info('Starting socket server...');
 
     this.server = net.createServer(this.onConnect.bind(this));
