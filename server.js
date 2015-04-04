@@ -59,6 +59,11 @@ Server.prototype.start = function() {
 
     if(config.ssl) {
 
+        //OCULUSHUT DEBUG
+        //=================
+        log.info('config.ssl is TRUE');
+        //
+        //=================
         this.ssl = tls.createServer(config.ssl.options, this.onConnect.bind(this));
         this.ssl.listen(config.ssl.port, function(err){
 

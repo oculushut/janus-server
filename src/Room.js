@@ -13,6 +13,8 @@ module.exports = Room;
 
 Room.prototype.addSession = function(session) {
     this._sessions.add(session);
+    //OCULUSHUT DEBUYG
+    log.info('Added session(' + session.id + ') to room(' + this.id + ')');
 };
 
 Room.prototype.removeSession = function(session) {

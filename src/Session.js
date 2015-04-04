@@ -1,4 +1,3 @@
-
 var byline = require('byline');
 
 
@@ -27,6 +26,11 @@ function Session(server, socket) {
             room.removeSession(self);
         });
     });
+
+
+    //OCULUSHUT DEBUG
+    log.info('Socket Creation');
+
 }
 
 module.exports = Session;
@@ -102,6 +106,11 @@ Session.prototype.logon = function(data) {
 
     this.currentRoom = this._server.getRoom(data.roomId);
     this.subscribe(data);
+
+
+    //OCULUSHUT DEBUG
+    log.info(data.userId + ' logged on');
+
 };
 
 Session.prototype.enter_room = function(data) {
@@ -127,6 +136,11 @@ Session.prototype.enter_room = function(data) {
         roomId: data.roomId,
         oldRoomId: oldRoomId
     });
+
+
+    //OCULUSHUT DEBUG
+    log.info(data.userId + ' entered room: ' + data.roomId);
+
 };
 
 Session.prototype.move = function(position) {
@@ -136,6 +150,9 @@ Session.prototype.move = function(position) {
         userId: this.id,
         position: position
     };
+
+    //OCULUSHUT DEBUG
+    log.info(data.userId + ' just moved to ' + data.position);
 
     this.currentRoom.emit('user_moved', data);
 };
@@ -147,6 +164,10 @@ Session.prototype.chat = function(message) {
         userId: this.id,
         message: message
     };
+
+
+    //OCULUSHUT DEBUG
+    log.info(data.userId + ' just chatted');
 
     this.currentRoom.emit('user_chat', data);
 };
@@ -164,6 +185,10 @@ Session.prototype.subscribe = function(data) {
         room.addSession(this);
         this._rooms.push(room);
     }
+
+
+    //OCULUSHUT DEBUG
+    log.info(this.id + ' just subscribed to ' + data.roomId);
 
     this.send('okay');
 };
@@ -183,6 +208,10 @@ Session.prototype.unsubscribe = function(data) {
         this._rooms.slice(i,1);
     }
 
+
+    //OCULUSHUT DEBUG
+    log.info(data.userId + ' just unsubscribed');
+
     this.send('okay');
 };
 
@@ -201,4 +230,9 @@ Session.prototype.portal = function(portal) {
 
     this.currentRoom.emit('user_portal', data);
     this.send('okay');
+
+
+    //OCULUSHUT DEBUG
+    log.info(data.userId + ' portalled');
+
 };
