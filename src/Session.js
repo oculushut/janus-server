@@ -139,7 +139,7 @@ Session.prototype.enter_room = function(data) {
 
 
     //OCULUSHUT DEBUG
-    log.info(data.userId + ' entered room: ' + data.roomId);
+    //log.info(data.userId + ' entered room: ' + data.roomId);
 
 };
 
@@ -152,7 +152,7 @@ Session.prototype.move = function(position) {
     };
 
     //OCULUSHUT DEBUG
-    log.info(data.userId + ' just moved to ' + data.position);
+    //log.info(data.userId + ' just moved to ' + data.position);
 
     this.currentRoom.emit('user_moved', data);
 };
