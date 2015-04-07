@@ -39,6 +39,8 @@ Session.prototype.send = function(method, data) {
     var packet = JSON.stringify({method:method,data:data});
     this._socket.write(packet+'\r\n');
     //log.info('S->C: ' + packet);
+    //OCULUSHUT DEBUG
+    log.info('Just sent message to client: ' + packet)
 };
 
 Session.prototype.clientError = function(message) {
@@ -139,7 +141,7 @@ Session.prototype.enter_room = function(data) {
 
 
     //OCULUSHUT DEBUG
-    //log.info(data.userId + ' entered room: ' + data.roomId);
+    log.info(this.id + ' entered room: ' + data.roomId);
 
 };
 
@@ -152,7 +154,7 @@ Session.prototype.move = function(position) {
     };
 
     //OCULUSHUT DEBUG
-    //log.info(data.userId + ' just moved to ' + data.position);
+    log.info(this.id + ' just moved to ' + data.position);
 
     this.currentRoom.emit('user_moved', data);
 };
