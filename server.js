@@ -11,12 +11,15 @@ global.log = require('./src/Logging');
 
 var Session = require('./src/Session');
 var Room = require('./src/Room');
+var Plugins = require('./src/Plugins');
 
 
 function Server() {
 
     this._sessions = new sets.Set();
     this._rooms = {};
+    this._userList = Array();
+    this._plugins = new Plugins(this);
 }
 
 Server.prototype.getRoom = function(roomId) {
@@ -27,6 +30,7 @@ Server.prototype.getRoom = function(roomId) {
     return this._rooms[roomId];
 };
 
+// ## Check if username is in use ##
 Server.prototype.isNameFree = function(name) {
 
     var free = true;
@@ -38,9 +42,10 @@ Server.prototype.isNameFree = function(name) {
     return free;
 };
 
+// ## Start Socket Server ##
 Server.prototype.start = function() {
     console.log('========================');
-    console.log('Janus VR Presence Server')
+    console.log('Janus VR Presence Server');
     console.log('========================');
     log.info('Startup date/time: ' + Date());
 
@@ -49,7 +54,7 @@ Server.prototype.start = function() {
     console.log('Startup date/time: ' + Date());
 
     this.server = net.createServer(this.onConnect.bind(this));
-    this.server.listen(config.port, function(err){
+    this.server.listen(config.port, "::", function(err){
 
         if(err) {
             log.error('Socket Server error listening on port: ' + config.port);
@@ -64,13 +69,14 @@ Server.prototype.start = function() {
     if(config.ssl) {
 
         this.ssl = tls.createServer(config.ssl.options, this.onConnect.bind(this));
-        this.ssl.listen(config.ssl.port, function(err){
+        this.ssl.listen(config.ssl.port, "::", function(err){
 
             if(err) {
                 log.error('SSL Server error listening on port: ' + config.ssl.port);
                 process.exit(1);
             }
 
+            console.log('SSL Server listening on port: ' + config.ssl.port);
             log.info('SSL Server listening on port: ' + config.ssl.port);
 
         });
@@ -79,6 +85,8 @@ Server.prototype.start = function() {
     this.startWebServer();
 };
 
+
+// ## start web server ##
 Server.prototype.startWebServer = function() {
 
     var self = this;
@@ -97,11 +105,12 @@ Server.prototype.startWebServer = function() {
     this.ws.use(router);
     this.ws.use(express.static(__dirname + '/public')); //serve out public website and firebox room associated with this server
 
-    this.ws.listen(config.webServer);
-    log.info('Web Server listening on port: ' + config.webServer);
-
+    this.ws.listen(config.webServer, "::");
+    log.info('Webserver started on port: ' + config.webServer);
+    console.log('Start Date/Time: ' + Date());
 };
 
+// ## action on client connection ##
 Server.prototype.onConnect = function(socket) {
 
     var self = this;
@@ -117,10 +126,9 @@ Server.prototype.onConnect = function(socket) {
     });
 
     socket.on('error', function(err){
+	log.error(addr);
         log.error('Socket error: ', err);
     });
 };
-
-
 
 (new Server()).start();

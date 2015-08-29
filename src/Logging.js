@@ -3,7 +3,6 @@ var args = require('optimist').argv;//Noted that this is deprecated.  TODO: repl
 var onFinished = require('finished');
 var fs = require('fs');
 var config = require(args.config || '../config.js');
-
 var rootDirectory = __dirname.substr(0,__dirname.lastIndexOf('/')+1);
 
 function callingFile(index, err) {
@@ -28,8 +27,9 @@ function callingFile(index, err) {
 if(args.debug) {
     npmlog.enableColor();
 } else {
-    npmlog.stream = fs.createWriteStream('server.log', {'flags':'a'});
-    npmlog.stream.write('------------- Restart -----------------\n');
+	npmlog.stream = fs.createWriteStream('server.log', {'flags':'a'});
+	npmlog.stream.write('------------- Restart -----------------');
+
     switch (config.logLevel){
         case 'info':
             npmlog.level = 'info';

@@ -1,7 +1,14 @@
 node_modules
+cert
 
-/server-cert.pem
-
-/server-key.pem
+config.js
 
 /*.log
+
+/.*.swp
+
+/src/.*.swp
+
+/*~
+
+/src/*~

@@ -24,11 +24,35 @@ Copy and paste the examples below to see how it works
 #### 1.1 "logon" Method
 -----------------------
 
-Client -> Server Message Example
+You need to do this before anything else.
+
+Defined in config.js - authMode
+
+Has three possible options (defaults to 'optional'):
+
+        'none'     - Will not attempt to authenticate users, 
+
+                     anyone can connect with any unused userId.
+
+        'optional' - Anyone can connect, but if userId has been registered
+
+                     a password must be provided.
+
+        'required' - Only users with userids and passwords are allowed to connect.
+
+Client -> Server Message Example:
+
+This is an example of a message to logon with if the userId "LL" has not been registered:
+
 ```json
 {"method":"logon","data":{"userId":"LL", "version":"23.4","roomId":"345678354764987457"}}
 ```
 
+Client -> Server Message Example
+
+```json
+{"method":"logon","data":{"userId":"LL", "version":"23.4","roomId":"345678354764987457"}}
+```
 
 Real example from JanusVR 40.3
 
@@ -36,17 +60,48 @@ Real example from JanusVR 40.3
 {"method":"logon","data":{"userId":"ProudMinna333","version":"40.3","roomId":"e562b2e1339fc08d635d28481121857c"}}
 ```
 
+This is an example of a message to logon with if the userId "LL" HAS been registered and therefore requires a password (recommend that this is not used until security tightened up in release):
+
+```json
+{"method":"logon","data":{"userId":"LL", "version":"23.4","roomId":"345678354764987457","password":"MyPassword"}}
+```
+
+version = the client version
+
+roomId = MD5 hash of the room's URL
+
+password = password associated with userId
+
 Server -> Client Response Example:
 
-Will receive: 
+If everything is OK and you logged in then you will receive: 
+
+```json
+{"method":"okay"}
+```
+
+If no roomId was found in the logon request:
+
+```json
+{"method":"error", "data":{"message":"Missing roomId in data packet"}}
+```
+
+If no userId was found in the logon request:
 
 ```json
 {"method":"okay"} if everything was okay or a {"method":"error", "data":{"message": "Some error string"}}
 ```
 
-You need to do this before anything else.  roomId is the room you are starting in and you will be subscribed to that room's events.  Version is the client version and roomId is a MD5 hash of the room's URL. Logon will fail if a client is already using that name 
+```json
+{"method":"error", "data":{"message": "Missing userId in data packet"}}
+```
 
-TODO: Add authentication
+If the userId is already in use:
+
+```json
+{"method":"error", "data":{"message": "User name is already in use"}}
+```
+
 TODO: Reject incompatable clients  
 
 ----------------------------
@@ -178,6 +233,35 @@ Real example from JanusVR 40.3:
 Will receive the following if everything is OK.
 
 Will receive: {"method":"okay"}
+
+--------------------------------
+#### 1.8 "users_online" Method
+--------------------------------
+
+Get list of connected users.
+
+Defined in config.js: config.maxUserResults = 100.
+
+{“method”: “users_online”}
+
+    List all users online up to config.maxUserResults.
+
+{“method”: “users_online”, “data”: {“maxResults”: 50}}
+
+    List all users online up to ‘maxResults’  or config.maxUserResults, whichever is smaller.
+
+{“method”: “users_online”, “data”: {“roomId”: “xyz”}}
+
+    List all users in ‘roomId’ up to config.maxUserResults.
+
+{“method”: “users_online”, “data”: {“maxResults”: 50, “roomId”: “xyz”}}
+
+    List all users in ‘roomId’ up to ‘maxResults’  or config.maxUserResults, whichever is smaller.
+
+Reply:
+
+{“method”: “users_online”, “data”: {“results”: 50, “roomId”: “xyz”, “users”: {“Arthur Dent”, “Data”, “Lore”}}
+
 
 ======================================
 ### 2. Server -> Client Notifications:
