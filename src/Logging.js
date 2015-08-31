@@ -30,18 +30,21 @@ if(args.debug) {
 	npmlog.stream = fs.createWriteStream('server.log', {'flags':'a'});
 	npmlog.stream.write('------------- Restart -----------------');
 
-    switch (config.logLevel){
-        case 'info':
-            npmlog.level = 'info';
-            break;
-        case 'error':
-            npmlog.level = 'error';
-            break;
-        case 'silent':
-            npmlog.level = 'silent';
-            break;
-        default:
-            npmlog.level = 'info';
+	switch (config.logLevel){
+        	case 'verbose':
+			npmlog.level = 'verbose';
+			break;
+        	case 'info':
+            		npmlog.level = 'info';
+            		break;
+        	case 'error':
+            		npmlog.level = 'error';
+            		break;
+        	case 'silent':
+            		npmlog.level = 'silent';
+            		break;
+        	default:
+            		npmlog.level = 'info';
     }
 }
 
@@ -78,7 +81,7 @@ function httpLog(req,res,next) {
 module.exports = {
     _log: npmlog,
     info: log.bind(null,'info'),
-    debug: log.bind(null,'verbose'),
+    verbose: log.bind(null,'verbose'),
     warn: log.bind(null,'warn'),
     fatal: log.bind(null,'fatal'),
     error: log.bind(null,'error'),

@@ -14,11 +14,12 @@ module.exports = {
      *  the server.log file - other than the
      *  restart message which will ALWAYS show.
      *
+     * "verbose" -> log debugging info - very slow!
      * "info" -> log info and error events
      * "error" -> log error events only
      * "silent" -> do not log at all
      *
-     * debug, warn, fatal, error, http could be 
+     * warn, fatal, error, http could be 
      * implemented as well, but not done yet*/
     logLevel: "info",
     

@@ -23,6 +23,7 @@ function Server() {
 }
 
 Server.prototype.getRoom = function(roomId) {
+    log.verbose('server.js:getRoom() called');
     if(this._rooms[roomId] === undefined)  {
         this._rooms[roomId] = new Room(roomId);
     }
@@ -32,7 +33,7 @@ Server.prototype.getRoom = function(roomId) {
 
 // ## Check if username is in use ##
 Server.prototype.isNameFree = function(name) {
-
+    log.verbose('server.js:isNameFree() called');
     var free = true;
     this._sessions.each(function(s) {
         if(s.id === name) {
@@ -48,7 +49,6 @@ Server.prototype.start = function() {
     console.log('Janus VR Presence Server');
     console.log('========================');
     log.info('Startup date/time: ' + Date());
-
     console.log('See server.log for activity information and config.js for configuration');
     console.log('Log level: ' + config.logLevel);
     console.log('Startup date/time: ' + Date());

@@ -71,9 +71,12 @@ Session.validMethods = [
 
         try {
             payload = JSON.parse(data);
+            log.verbose('Session.js:received from client: ' + data);
         } catch(e) {
-            log.info("data: " + data);
-            log.info("payload: " + payload);
+            log.info("data raw: " + data);
+            log.info("data as string: " + JSON.stringify(data));
+            log.info("payload raw: " + payload);
+            log.info("payload as string: " + JSON.stringify(data));
             this.clientError('Unable to parse last message');
             return;
         }
@@ -105,6 +108,8 @@ Session.validMethods = [
 
 // ## User Logon ##
 Session.prototype.logon = function(data) {
+
+    log.verbose('Session.js:logon() called');
 
     if(data.userId === undefined || data.userId === '') {
         this.clientError('Missing userId in data packet');
@@ -140,6 +145,8 @@ Session.prototype.logon = function(data) {
 // ## user enter room ##
 Session.prototype.enter_room = function(data) {
 
+    log.verbose('Session.js:enter_room() called');
+
     if(data.roomId  === undefined) {
         this.clientError('Missing roomId in data packet');
         return;
@@ -170,6 +177,8 @@ Session.prototype.enter_room = function(data) {
 // ## user move ##
 Session.prototype.move = function(position) {
 
+    log.verbose('Session.js:move() called');
+
     var data = {
         roomId: this.currentRoom.id,
         userId: this.id,
@@ -183,6 +192,9 @@ Session.prototype.move = function(position) {
 // ## user chat ##
 Session.prototype.chat = function(message) {
 
+
+    log.verbose('Session.js:chat() called');
+
     var data = {
         roomId: this.currentRoom.id,
         userId: this.id,
@@ -193,6 +205,8 @@ Session.prototype.chat = function(message) {
 };
 
 Session.prototype.subscribe = function(data) {
+
+    log.verbose('Session.js:subscribe() called');
 
     if(data.roomId  === undefined) {
         this.clientError('Missing roomId in data packet');
@@ -210,6 +224,8 @@ Session.prototype.subscribe = function(data) {
 };
 
 Session.prototype.unsubscribe = function(data) {
+
+    log.verbose('Session.js:unsubscribe() called');
 
     if(data.roomId  === undefined) {
         this.clientError('Missing roomId in data packet');
@@ -232,6 +248,8 @@ Session.prototype.portal = function(portal) {
 
     //TODO: Persist portals
 
+    log.verbose('Session.js:portal() called');
+
     var data = {
         roomId: this.currentRoom.id,
         userId: this.id,
@@ -245,6 +263,9 @@ Session.prototype.portal = function(portal) {
 };
 
 Session.prototype.users_online = function(data) {
+
+    log.verbose('Session.js:users_online() called');
+
     var maxResults = config.maxUserResults;
     var count = 0;
     var results = Array();
